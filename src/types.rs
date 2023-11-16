@@ -1,0 +1,83 @@
+use clap::Parser;
+use serde::{Deserialize, Serialize};
+use uuid::Uuid;
+use chrono::{DateTime, Utc};
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Task {
+    pub id: Uuid,
+    pub title: String,
+    pub description: String,
+    pub priority: String,
+    pub completed: bool,
+    pub created_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct TaskListWrapper {
+    pub tasks: Vec<Task>,
+}
+
+#[derive(Debug)]
+pub enum TaskCommand {
+    Commands,
+    List,
+    Add,
+    Remove,
+    Edit,
+    Filter,
+}
+
+impl TaskCommand {
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            TaskCommand::Commands => "commands",
+            TaskCommand::List => "list",
+            TaskCommand::Add => "add",
+            TaskCommand::Remove => "remove",
+            TaskCommand::Edit => "edit",
+            TaskCommand::Filter => "filter",
+        }
+    }
+
+    pub fn from_str(s: &str) -> Option<Self> {
+        match s {
+            "commands" => Some(TaskCommand::Commands),
+            "list" => Some(TaskCommand::List),
+            "add" => Some(TaskCommand::Add),
+            "remove" => Some(TaskCommand::Remove),
+            "edit" => Some(TaskCommand::Edit),
+            "filter" => Some(TaskCommand::Filter),
+            _ => None,
+        }
+    }
+}
+
+#[derive(Parser, Debug)]
+#[command(author, version, about, long_about = None)]
+pub struct Args {
+    /// Command of todo item
+    #[arg(short, long)]
+    pub command: String,
+
+    /// title of the person to greet
+    #[arg(short, long)]
+    pub title: Option<String>,
+
+    /// title of the person to greet
+    #[arg(short, long)]
+    pub description: Option<String>,
+
+    /// title of the person to greet
+    #[arg(short, long)]
+    pub status: Option<String>,
+
+    /// title of the person to greet
+    #[arg(short, long)]
+    pub id: Option<Uuid>,
+
+    /// Order of the tasks
+    #[arg(short, long)]
+    pub priority: Option<String>,
+}

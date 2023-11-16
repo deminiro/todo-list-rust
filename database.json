@@ -1,0 +1,49 @@
+{
+  "tasks": [
+    {
+      "id": "cf977d5e-89a0-4e81-93ec-2b5514990e31",
+      "title": "Wake up",
+      "description": "A new collection started",
+      "priority": "URGENT",
+      "completed": true,
+      "created_at": "2023-11-15T17:00:00Z",
+      "updated_at": "2023-11-15T17:00:00Z"
+    },
+    {
+      "id": "784f035f-d816-45fb-8745-692ae96e5e43",
+      "title": "Make todo list",
+      "description": "Create todo list using Rust",
+      "priority": "MEDIUM",
+      "completed": true,
+      "created_at": "2023-11-15T17:00:00Z",
+      "updated_at": "2023-11-15T17:00:00Z"
+    },
+    {
+      "id": "705d42c2-28b2-49ae-9e80-86af0b23fc4d",
+      "title": "Add sorting",
+      "description": "Sort elements ASC or DESC",
+      "priority": "MEDIUM",
+      "completed": false,
+      "created_at": "2023-11-15T17:00:00Z",
+      "updated_at": "2023-11-15T17:00:00Z"
+    },
+    {
+      "id": "705d42c2-28b2-49ae-9e80-86af0b23fc3d",
+      "title": "Add categorization",
+      "description": "Filter elements by category",
+      "priority": "URGENT",
+      "completed": true,
+      "created_at": "2023-11-15T17:00:00Z",
+      "updated_at": "2023-11-15T17:16:05.793076700Z"
+    },
+    {
+      "id": "cd4a207b-37f0-400e-a0a0-66c5f5dbb990",
+      "title": "CRUD",
+      "description": "Create API endpoints to use HTTP requests instead of command line.",
+      "priority": "URGENT",
+      "completed": false,
+      "created_at": "2023-11-16T12:36:00.085305400Z",
+      "updated_at": "2023-11-16T12:36:00.085306200Z"
+    }
+  ]
+}
