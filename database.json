@@ -44,6 +44,15 @@
       "completed": false,
       "created_at": "2023-11-16T12:36:00.085305400Z",
       "updated_at": "2023-11-16T12:36:00.085306200Z"
+    },
+    {
+      "id": "6743770d-cb69-4fb3-9211-9b98cafb3dc5",
+      "title": "Post task",
+      "description": "Task has been updated",
+      "priority": "",
+      "completed": false,
+      "created_at": "2023-11-16T15:25:44.449141200Z",
+      "updated_at": "2023-11-16T15:34:46.155138500Z"
     }
   ]
 }
