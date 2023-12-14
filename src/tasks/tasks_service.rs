@@ -1,8 +1,11 @@
+use diesel::{PgConnection, RunQueryDsl};
 use tasks_types::{TaskListWrapper, DataBaseTask, ApiRequestTask};
 use std::{fs::{File}, path::Path, io::{BufReader, self, Write}};
 use uuid::Uuid;
 use chrono::{Utc};
 use serde_json::Error as SerdeJsonError;
+use crate::schema::tasks::dsl::*;
+use crate::schema::tasks;
 
 use super::tasks_types::{self, ApiUpdateTask};
 
@@ -41,82 +44,86 @@ fn update_database(tasks_wrapper: TaskListWrapper) {
   }
 }
 
+pub fn get_tasks_database(conn: &mut PgConnection) -> Result<Vec<DataBaseTask>, diesel::result::Error> {
+  tasks.load::<DataBaseTask>(conn)
+}
+
 pub fn get_tasks() -> Result<Vec<DataBaseTask>, SerdeJsonError> {
   let tasks_wrapper = get_database()?;
 
   Ok(tasks_wrapper.tasks)
 }
 
-pub fn add_task(body: ApiRequestTask) -> Result<DataBaseTask, SerdeJsonError> {
-  match get_database() {
-    Ok(mut tasks_wrapper) => {
-      let new_task = DataBaseTask {
-          title: body.title, // If it's already Option<String>, use it directly
-          description: Some(body.description.unwrap_or_else(|| "".to_string())),
-          completed: Some(body.completed.unwrap_or(false)),
-          priority: Some(body.priority.unwrap_or_else(|| "".to_string())),
-          created_at: Utc::now(),
-          updated_at: Utc::now(),
-          id: Uuid::new_v4(),
-      };
+// pub fn add_task(body: ApiRequestTask) -> Result<DataBaseTask, SerdeJsonError> {
+//   match get_database() {
+//     Ok(mut tasks_wrapper) => {
+//       let new_task = DataBaseTask {
+//           title: body.title, // If it's already Option<String>, use it directly
+//           description: Some(body.description.unwrap_or_else(|| "".to_string())),
+//           completed: Some(body.completed.unwrap_or(false)),
+//           priority: Some(body.priority.unwrap_or_else(|| "".to_string())),
+//           created_at: Utc::now(),
+//           updated_at: Utc::now(),
+//           id: Uuid::new_v4(),
+//       };
 
-      tasks_wrapper.tasks.push(new_task.clone());
-      update_database(tasks_wrapper); // Handle error if update_database returns Result
+//       tasks_wrapper.tasks.push(new_task.clone());
+//       update_database(tasks_wrapper); // Handle error if update_database returns Result
 
-      Ok(new_task)
-  },
-  Err(e) => Err(e),
-  }
-}
+//       Ok(new_task)
+//   },
+//   Err(e) => Err(e),
+//   }
+// }
 
-pub fn update_task(body: ApiUpdateTask) -> Result<bool, SerdeJsonError> {
-  match get_database() {
-    Ok(mut tasks_wrapper) => {
-      let task_index = tasks_wrapper.tasks
-          .iter()
-          .position(|task| task.id == body.id);
+// pub fn update_task(body: ApiUpdateTask) -> Result<bool, SerdeJsonError> {
+//   match get_database() {
+//     Ok(mut tasks_wrapper) => {
+//       let task_index = tasks_wrapper.tasks
+//           .iter()
+//           .position(|task| task.id == body.id);
 
-      if let Some(index) = task_index {
-          let item = &tasks_wrapper.tasks[index];
+//       if let Some(index) = task_index {
+//           let item = &tasks_wrapper.tasks[index];
 
-          let updated_task = DataBaseTask {
-              title: body.task.title,
-              description: Some(body.task.description.unwrap_or_else(|| "".to_string())),
-              completed: Some(body.task.completed.unwrap_or(false)),
-              priority: Some(body.task.priority.unwrap_or_else(|| "".to_string())),
-              created_at: item.created_at,
-              updated_at: Utc::now(),
-              id: item.id,
-          };
-          println!("{:?}", updated_task.clone());
-          tasks_wrapper.tasks[index] = updated_task; // Direct assignment
-          update_database(tasks_wrapper); // Assuming this returns a Result
-          return Ok(true)
-      } else {
-          println!("Element with id: \"{}\" does not exist.", body.id);
-          return Ok(false) // Consider using an Err to indicate failure
-      }
-  },
-  Err(e) => Err(e),
-  }
-}
+//           let updated_task = DataBaseTask {
+//               title: body.task.title,
+//               description: Some(body.task.description.unwrap_or_else(|| "".to_string())),
+//               completed: Some(body.task.completed.unwrap_or(false)),
+//               priority: Some(body.task.priority.unwrap_or_else(|| "".to_string())),
+//               created_at: item.created_at,
+//               updated_at: Utc::now(),
+//               id: item.id,
+//           };
+//           println!("{:?}", updated_task.clone());
+//           tasks_wrapper.tasks[index] = updated_task; // Direct assignment
+//           update_database(tasks_wrapper); // Assuming this returns a Result
+//           return Ok(true)
+//       } else {
+//           println!("Element with id: \"{}\" does not exist.", body.id);
+//           return Ok(false) // Consider using an Err to indicate failure
+//       }
+//   },
+//   Err(e) => Err(e),
+//   }
+// }
 
-pub fn remove_task(task_id: Uuid) -> Result<bool, SerdeJsonError> {
-  match get_database() {
-    Ok(mut tasks_wrapper) => {
-      if !tasks_wrapper.tasks.is_empty() {
-          tasks_wrapper.tasks.retain(|x| x.id != task_id);
-          update_database(tasks_wrapper); // Handle error if update_database returns Result
+// pub fn remove_task(task_id: Uuid) -> Result<bool, SerdeJsonError> {
+//   match get_database() {
+//     Ok(mut tasks_wrapper) => {
+//       if !tasks_wrapper.tasks.is_empty() {
+//           tasks_wrapper.tasks.retain(|x| x.id != task_id);
+//           update_database(tasks_wrapper); // Handle error if update_database returns Result
 
-          return Ok(true)
-      }
+//           return Ok(true)
+//       }
 
-      println!("Element with id: \"{}\" is not exist.", task_id);
-      Ok(false)
-  },
-  Err(e) => Err(e),
-  }
-}
+//       println!("Element with id: \"{}\" is not exist.", task_id);
+//       Ok(false)
+//   },
+//   Err(e) => Err(e),
+//   }
+// }
 
 // pub fn make_tasks_actions(args: Args) {
 //   let json_file_path = Path::new("./database.json");

@@ -1,16 +1,17 @@
+use diesel::Queryable;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 use chrono::{DateTime, Utc};
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
+#[derive(Queryable, Debug, Clone, Serialize, Deserialize)]
+#[diesel(table_name = tasks)]
 pub struct DataBaseTask {
-    pub id: Uuid,
-    pub title: String,
+    pub id: i32, // Corresponds to Int4
+    pub title: String, // Corresponds to Varchar
     pub description: Option<String>,
     pub priority: Option<String>,
     pub completed: Option<bool>,
     pub created_at: DateTime<Utc>,
-    pub updated_at: DateTime<Utc>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

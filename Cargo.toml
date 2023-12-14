@@ -9,8 +9,16 @@ edition = "2021"
 actix-web = "4.4.0"
 chrono = { version = "0.4.31", features = ["serde"] }
 clap = { version = "4.4.7", features = ["derive"] }
+diesel = { version = "2.1.4", features = ["postgres", "chrono"] }
+dotenv = "0.15.0"
 ferris-says = "0.3.1"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 
 uuid = { version = "1.0", features = ["serde", "v4"] }
+zstd-sys = "2.0.9"
+
+[target.x86_64-pc-windows-gnu]
+rustflags = ["-L", "C:/Users/PC/.rustup/toolchains/stable-x86_64-pc-windows-gnu/lib/rustlib/x86_64-pc-windows-gnu/lib/self-contained"]
+linker = "C:/msys64/mingw64/bin/gcc.exe"
+ar = "C:/msys64/mingw64/bin/ar.exe"
