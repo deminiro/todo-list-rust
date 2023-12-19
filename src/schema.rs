@@ -8,5 +8,6 @@ diesel::table! {
         priority -> Nullable<Text>,
         completed -> Nullable<Bool>,
         created_at -> Timestamptz,
+        updated_at -> Timestamptz,
     }
 }
